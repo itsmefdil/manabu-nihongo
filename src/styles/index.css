@@ -1,0 +1,50 @@
+:root {
+  /* Japanese Traditional Colors */
+  --color-primary: #D74A49; /* Akabeni - Deep Red */
+  --color-secondary: #2E5C6E; /* Aitetsu - Iron Indigo */
+  --color-background: #F4F4F0; /* Gofun - Chalk White */
+  --color-surface: #FFFFFF;
+  --color-text-main: #2B2B2B;
+  --color-text-muted: #666666;
+  --color-accent: #ECA328; /* Yamabuki - Golden Yellow */
+  
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 16px;
+
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}

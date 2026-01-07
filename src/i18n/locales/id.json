@@ -1,0 +1,117 @@
+{
+    "common": {
+        "back": "Kembali ke Level {{level}}",
+        "words": "kata",
+        "characters": "karakter",
+        "patterns": "pola",
+        "settings": "Pengaturan"
+    },
+    "dashboard": {
+        "welcome": "Selamat Datang Kembali!",
+        "subtitle": "Lanjutkan perjalanan belajar bahasa Jepangmu",
+        "streak": "Hari Berturut-turut 🔥",
+        "todayGoal": "Target Hari Ini",
+        "lessons": "pelajaran",
+        "experience": "Pengalaman",
+        "xpToNext": "{{xp}} XP menuju level berikutnya",
+        "totalLearned": "Total Dipelajari",
+        "levelProgress": "Progres Level",
+        "weeklyActivity": "Aktivitas Mingguan",
+        "quickStart": "Mulai Cepat",
+        "continueN5": "Lanjutkan N5",
+        "resumeVocab": "Lanjutkan kosakata",
+        "practiceKanji": "Latihan Kanji",
+        "studyGrammar": "Pelajari Tata Bahasa",
+        "learningTip": "💡 Tips Belajar",
+        "tipText": "Berlatihlah menulis kanji dengan tangan! Ini membantu menguatkan urutan coretan dan meningkatkan daya ingat.",
+        "complete": "Selesai"
+    },
+    "sidebar": {
+        "dashboard": "Dasbor",
+        "levels": "Level JLPT",
+        "settings": "Pengaturan",
+        "student": "Siswa",
+        "beginner": "Pemula {{level}}"
+    },
+    "level": {
+        "title": "Level {{level}}",
+        "subtitle": "Kuasai dasar-dasar bahasa Jepang",
+        "vocabulary": "Kosakata",
+        "kanji": "Kanji",
+        "grammar": "Tata Bahasa",
+        "startLearning": "Mulai belajar kata",
+        "masterCharacters": "Kuasai karakter",
+        "learnStructures": "Pelajari struktur kalimat",
+        "quiz": "Latihan",
+        "testKnowledge": "Uji pengetahuanmu"
+    },
+    "vocabulary": {
+        "title": "Kosakata",
+        "noContent": "Belum ada konten kosakata untuk level ini."
+    },
+    "kanji": {
+        "title": "Kanji",
+        "meaning": "Arti",
+        "examples": "Contoh",
+        "noContent": "Belum ada konten kanji untuk level ini."
+    },
+    "grammar": {
+        "title": "Tata Bahasa",
+        "noContent": "Belum ada konten tata bahasa untuk level ini."
+    },
+    "kana": {
+        "title": "Hiragana & Katakana",
+        "subtitle": "Pelajari huruf dasar Jepang",
+        "hiragana": "Hiragana",
+        "katakana": "Katakana",
+        "hiraganaDesc": "Huruf dasar untuk kata Jepang asli",
+        "katakanaDesc": "Huruf untuk kata serapan asing",
+        "characters": "karakter",
+        "clickToLearn": "Klik karakter untuk belajar",
+        "romaji": "Romaji",
+        "practice": "Latihan",
+        "chart": "Tabel",
+        "rows": {
+            "a": "Baris A",
+            "ka": "Baris KA",
+            "sa": "Baris SA",
+            "ta": "Baris TA",
+            "na": "Baris NA",
+            "ha": "Baris HA",
+            "ma": "Baris MA",
+            "ya": "Baris YA",
+            "ra": "Baris RA",
+            "wa": "Baris WA"
+        }
+    },
+    "flashcard": {
+        "title": "Latihan Kartu",
+        "subtitle": "Uji pengetahuanmu",
+        "start": "Mulai Latihan",
+        "showAnswer": "Lihat Jawaban",
+        "correct": "Benar",
+        "incorrect": "Salah",
+        "next": "Selanjutnya",
+        "finish": "Selesai",
+        "score": "Skor",
+        "tryAgain": "Coba Lagi",
+        "backToLevel": "Kembali ke Level",
+        "question": "Pertanyaan",
+        "of": "dari",
+        "whatMeaning": "Apa arti dari kata ini?",
+        "selectType": "Pilih jenis latihan",
+        "vocabQuiz": "Kosakata",
+        "kanjiQuiz": "Kanji",
+        "complete": "Selesai!",
+        "yourScore": "Skormu"
+    },
+    "days": {
+        "mon": "Sen",
+        "tue": "Sel",
+        "wed": "Rab",
+        "thu": "Kam",
+        "fri": "Jum",
+        "sat": "Sab",
+        "sun": "Min"
+    }
+}
