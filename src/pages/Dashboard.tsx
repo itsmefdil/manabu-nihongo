@@ -53,8 +53,32 @@ export function Dashboard() {
     const progressPercent = (todayLessons / todayGoal) * 100;
     const xpPercent = (totalXp / nextLevelXp) * 100;
 
-    const dayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as const;
-    const weeklyProgress = [3, 5, 4, 2, 5, 3, todayLessons];
+    // Calculate weekly activity chart data (last 7 days)
+    const chartData = (() => {
+        const data = [];
+        const today = new Date();
+        const logs = progressData?.weeklyActivity || [];
+        const daysMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+        // Find max count for scaling (min 5 for baseline)
+        const maxCount = Math.max(5, ...logs.map(l => l.count));
+
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(today.getDate() - i);
+            const dateStr = d.toISOString().split('T')[0];
+            const log = logs.find(l => l.date === dateStr);
+            const dayKey = daysMap[d.getDay()];
+
+            data.push({
+                dayKey,
+                count: log?.count || 0,
+                isToday: i === 0,
+                height: Math.min(((log?.count || 0) / maxCount) * 80, 80) // Max 80px height
+            });
+        }
+        return data;
+    })();
 
     // Calculate total learned from API summary
     const summary = progressData?.summary;
@@ -177,12 +201,20 @@ export function Dashboard() {
                             <TrendingUp size={20} color="var(--color-text-muted)" />
                         </div>
                         {levelProgress.map((lp) => {
-                            // If authenticated, we map the global summary to the CURRENT level
-                            // This is a simplification as per plan
-                            const isCurrentLevel = user?.currentLevel === lp.level;
-                            const vocabCount = (isAuthenticated && isCurrentLevel) ? vocabLearned : (isAuthenticated ? 0 : lp.vocab);
-                            const kanjiCount = (isAuthenticated && isCurrentLevel) ? kanjiLearned : (isAuthenticated ? 0 : lp.kanji);
-                            const grammarCount = (isAuthenticated && isCurrentLevel) ? grammarLearned : (isAuthenticated ? 0 : lp.grammar);
+                            // Extract data for this specific level if available
+                            const levelData = progressData?.levels?.[lp.level];
+
+                            const vocabCount = isAuthenticated
+                                ? ((levelData?.vocab.mastered ?? 0) + (levelData?.vocab.learning ?? 0))
+                                : lp.vocab;
+
+                            const kanjiCount = isAuthenticated
+                                ? ((levelData?.kanji.mastered ?? 0) + (levelData?.kanji.learning ?? 0))
+                                : lp.kanji;
+
+                            const grammarCount = isAuthenticated
+                                ? ((levelData?.grammar.mastered ?? 0) + (levelData?.grammar.learning ?? 0))
+                                : lp.grammar;
 
                             return (
                                 <div key={lp.level} style={{ marginBottom: '20px' }}>
@@ -207,10 +239,17 @@ export function Dashboard() {
                             <Clock size={20} color="var(--color-text-muted)" />
                         </div>
                         <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '100px', gap: '8px' }}>
-                            {dayKeys.map((day, i) => (
-                                <div key={day} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                                    <div style={{ width: '100%', height: `${(weeklyProgress[i] / 5) * 80}px`, background: i === 6 ? 'var(--color-primary)' : 'rgba(215, 74, 73, 0.3)', borderRadius: '4px', minHeight: '8px' }}></div>
-                                    <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{t(`days.${day}`)}</span>
+                            {chartData.map((day, i) => (
+                                <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                                    <div style={{
+                                        width: '100%',
+                                        height: `${day.height}px`,
+                                        background: day.isToday ? 'var(--color-primary)' : 'rgba(215, 74, 73, 0.3)',
+                                        borderRadius: '4px',
+                                        minHeight: '4px', // Always show a tiny bar
+                                        transition: 'height 0.3s ease'
+                                    }}></div>
+                                    <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{t(`days.${day.dayKey}`)}</span>
                                 </div>
                             ))}
                         </div>
@@ -254,6 +293,6 @@ export function Dashboard() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

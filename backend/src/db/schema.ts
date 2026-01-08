@@ -82,6 +82,15 @@ export const grammar = sqliteTable('grammar', {
     examples: text('examples').notNull(), // JSON array as string
 });
 
+// Activity Logs - tracks daily activity history
+export const activityLogs = sqliteTable('activity_logs', {
+    id: text('id').primaryKey(),
+    userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    date: text('date').notNull(), // YYYY-MM-DD
+    count: integer('count').default(0), // items reviewed / lessons completed
+    lastUpdatedAt: integer('last_updated_at', { mode: 'timestamp' }).$defaultFn(() => new Date()),
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -91,3 +100,4 @@ export type Streak = typeof streaks.$inferSelect;
 export type Vocabulary = typeof vocabulary.$inferSelect;
 export type Kanji = typeof kanji.$inferSelect;
 export type Grammar = typeof grammar.$inferSelect;
+export type ActivityLog = typeof activityLogs.$inferSelect;

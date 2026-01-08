@@ -1,21 +1,66 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
-import { n5Grammar } from '../data/n5_grammar';
-import type { Grammar } from '../types';
-import { useState } from 'react';
+import { ArrowLeft, ChevronDown, ChevronUp, Loader } from 'lucide-react';
+import { contentApi } from '../api';
+import type { Grammar } from '../api';
 
 export function GrammarList() {
     const { level } = useParams<{ level: string }>();
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const [grammarList, setGrammarList] = useState<Grammar[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [expandedId, setExpandedId] = useState<string | null>(null);
 
-    const grammarList: Grammar[] = level === 'N5' ? n5Grammar : [];
+    useEffect(() => {
+        const fetchGrammar = async () => {
+            if (!level) return;
+            setIsLoading(true);
+            try {
+                const result = await contentApi.getGrammar(level);
+                if (result.success && result.data) {
+                    setGrammarList(result.data);
+                } else {
+                    setError('Gagal memuat tata bahasa.');
+                }
+            } catch (err) {
+                setError('Terjadi kesalahan saat memuat data.');
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchGrammar();
+    }, [level]);
 
     const toggleExpand = (id: string) => {
         setExpandedId(expandedId === id ? null : id);
     };
+
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+                <Loader size={32} style={{ animation: 'spin 1s linear infinite' }} />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{ textAlign: 'center', padding: '48px', color: 'var(--color-text-muted)' }}>
+                <p>{error}</p>
+                <button
+                    onClick={() => navigate(-1)}
+                    style={{ marginTop: '16px', color: 'var(--color-primary)', fontWeight: '600' }}
+                >
+                    Kembali
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div>

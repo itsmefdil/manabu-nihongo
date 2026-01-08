@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, gte } from 'drizzle-orm';
 import { db, schema } from '../db';
 import { authMiddleware, type AuthRequest } from '../middleware/auth';
 
@@ -25,8 +25,13 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
             kana: { learning: 0, mastered: 0 },
         };
 
+        const levels: Record<string, typeof summary> = {};
+
         for (const p of progressData) {
             const type = p.itemType as keyof typeof summary;
+            const level = p.level;
+
+            // Update global summary
             if (summary[type]) {
                 if (p.status === 'mastered') {
                     summary[type].mastered++;
@@ -34,13 +39,45 @@ router.get('/', authMiddleware, async (req: AuthRequest, res) => {
                     summary[type].learning++;
                 }
             }
+
+            // Update level summary
+            if (!levels[level]) {
+                levels[level] = {
+                    vocab: { learning: 0, mastered: 0 },
+                    kanji: { learning: 0, mastered: 0 },
+                    grammar: { learning: 0, mastered: 0 },
+                    kana: { learning: 0, mastered: 0 },
+                };
+            }
+
+            if (levels[level][type]) {
+                if (p.status === 'mastered') {
+                    levels[level][type].mastered++;
+                } else {
+                    levels[level][type].learning++;
+                }
+            }
         }
+
+        // Get weekly activity (last 7 days)
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+        const dateStr = sevenDaysAgo.toISOString().split('T')[0] as string;
+
+        const activityLogs = await db.select()
+            .from(schema.activityLogs)
+            .where(and(
+                eq(schema.activityLogs.userId, userId),
+                gte(schema.activityLogs.date, dateStr)
+            ));
 
         return res.json({
             success: true,
             data: {
                 streak: streakData[0] || { currentStreak: 0, totalXp: 0, todayXp: 0 },
                 summary,
+                levels,
+                weeklyActivity: activityLogs,
                 totalItems: progressData.length,
             },
         });
@@ -71,7 +108,7 @@ router.post('/update', authMiddleware, async (req: AuthRequest, res) => {
 
         const xpGained = correct ? 10 : 2;
 
-        if (existing.length > 0) {
+        if (existing.length > 0 && existing[0]) {
             // Update
             const current = existing[0];
             const newCorrect = (current.correctCount || 0) + (correct ? 1 : 0);
@@ -108,10 +145,10 @@ router.post('/update', authMiddleware, async (req: AuthRequest, res) => {
         }
 
         // Update streak and XP
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date().toISOString().split('T')[0] as string;
         const streakData = await db.select().from(schema.streaks).where(eq(schema.streaks.userId, userId)).limit(1);
 
-        if (streakData.length > 0) {
+        if (streakData.length > 0 && streakData[0]) {
             const streak = streakData[0];
             const isNewDay = streak.lastActiveDate !== today;
             const wasYesterday = (() => {
@@ -121,16 +158,47 @@ router.post('/update', authMiddleware, async (req: AuthRequest, res) => {
                 return streak.lastActiveDate === yesterday.toISOString().split('T')[0];
             })();
 
+            const currentTotalXp = streak.totalXp || 0;
+            const currentTodayXp = streak.todayXp || 0;
+            const currentTodayLessons = streak.todayLessons || 0;
+            const currentStreakVal = streak.currentStreak || 0;
+            const currentLongestStreak = streak.longestStreak || 0;
+
             await db.update(schema.streaks)
                 .set({
                     lastActiveDate: today,
-                    totalXp: (streak.totalXp || 0) + xpGained,
-                    todayXp: isNewDay ? xpGained : (streak.todayXp || 0) + xpGained,
-                    todayLessons: isNewDay ? 1 : (streak.todayLessons || 0) + 1,
-                    currentStreak: isNewDay ? (wasYesterday ? (streak.currentStreak || 0) + 1 : 1) : streak.currentStreak,
-                    longestStreak: Math.max(streak.longestStreak || 0, isNewDay && wasYesterday ? (streak.currentStreak || 0) + 1 : streak.currentStreak || 0),
+                    totalXp: currentTotalXp + xpGained,
+                    todayXp: isNewDay ? xpGained : currentTodayXp + xpGained,
+                    todayLessons: isNewDay ? 1 : currentTodayLessons + 1,
+                    currentStreak: isNewDay ? (wasYesterday ? currentStreakVal + 1 : 1) : currentStreakVal,
+                    longestStreak: Math.max(currentLongestStreak, isNewDay && wasYesterday ? currentStreakVal + 1 : currentStreakVal),
                 })
                 .where(eq(schema.streaks.id, streak.id));
+        }
+
+        // Update Activity Log (Daily Count)
+        const existingLog = await db.select()
+            .from(schema.activityLogs)
+            .where(and(
+                eq(schema.activityLogs.userId, userId),
+                eq(schema.activityLogs.date, today)
+            ))
+            .limit(1);
+
+        if (existingLog.length > 0 && existingLog[0]) {
+            await db.update(schema.activityLogs)
+                .set({
+                    count: (existingLog[0].count || 0) + 1,
+                    lastUpdatedAt: new Date(),
+                })
+                .where(eq(schema.activityLogs.id, existingLog[0].id));
+        } else {
+            await db.insert(schema.activityLogs).values({
+                id: uuidv4(),
+                userId,
+                date: today,
+                count: 1,
+            });
         }
 
         return res.json({ success: true, data: { xpGained } });

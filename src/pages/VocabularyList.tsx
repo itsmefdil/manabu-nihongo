@@ -1,16 +1,73 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Volume2 } from 'lucide-react';
-import { n5Vocabulary } from '../data/n5_vocab';
-import type { Vocabulary } from '../types';
+import { ArrowLeft, Volume2, Loader, Lightbulb, Search } from 'lucide-react';
+import { contentApi } from '../api';
+import type { Vocabulary } from '../api';
+import { toRomaji } from 'wanakana';
 
 export function VocabularyList() {
     const { level } = useParams<{ level: string }>();
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const [vocabList, setVocabList] = useState<Vocabulary[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
-    // In a real app, filtering would happen here based on level or from API
-    const vocabList: Vocabulary[] = level === 'N5' ? n5Vocabulary : [];
+    const filteredList = vocabList.filter(item => {
+        const query = searchQuery.toLowerCase();
+        return (
+            item.word.toLowerCase().includes(query) ||
+            item.reading.toLowerCase().includes(query) ||
+            item.meaning.toLowerCase().includes(query) ||
+            toRomaji(item.reading).toLowerCase().includes(query)
+        );
+    });
+
+    useEffect(() => {
+        const fetchVocab = async () => {
+            if (!level) return;
+            setIsLoading(true);
+            try {
+                const result = await contentApi.getVocab(level);
+                if (result.success && result.data) {
+                    setVocabList(result.data);
+                } else {
+                    setError('Gagal memuat kosakata.');
+                }
+            } catch (err) {
+                setError('Terjadi kesalahan saat memuat data.');
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchVocab();
+    }, [level]);
+
+    if (isLoading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '400px' }}>
+                <Loader size={32} style={{ animation: 'spin 1s linear infinite' }} />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div style={{ textAlign: 'center', padding: '48px', color: 'var(--color-text-muted)' }}>
+                <p>{error}</p>
+                <button
+                    onClick={() => navigate(-1)}
+                    style={{ marginTop: '16px', color: 'var(--color-primary)', fontWeight: '600' }}
+                >
+                    Kembali
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div>
@@ -32,63 +89,119 @@ export function VocabularyList() {
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
                 <h1 style={{ fontSize: '28px', fontWeight: 'bold' }}>{t('vocabulary.title')}</h1>
-                <span style={{
-                    background: 'rgba(215, 74, 73, 0.1)',
-                    color: 'var(--color-primary)',
-                    padding: '4px 12px',
-                    borderRadius: '99px',
-                    fontWeight: '600',
-                    fontSize: '14px'
-                }}>
-                    {vocabList.length} {t('common.words')}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div style={{ position: 'relative' }}>
+                        <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
+                        <input
+                            type="text"
+                            placeholder="Cari kosakata..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            style={{
+                                padding: '8px 16px 8px 40px',
+                                borderRadius: '99px',
+                                border: '1px solid rgba(0,0,0,0.1)',
+                                fontSize: '14px',
+                                width: '240px',
+                                outline: 'none'
+                            }}
+                        />
+                    </div>
+                    <span style={{
+                        background: 'rgba(215, 74, 73, 0.1)',
+                        color: 'var(--color-primary)',
+                        padding: '4px 12px',
+                        borderRadius: '99px',
+                        fontWeight: '600',
+                        fontSize: '14px'
+                    }}>
+                        {filteredList.length} {t('common.words')}
+                    </span>
+                </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                {vocabList.map((item) => (
-                    <div key={item.id} style={{
-                        background: 'white',
-                        padding: '20px',
-                        borderRadius: '12px',
-                        boxShadow: 'var(--shadow-sm)',
-                        border: '1px solid rgba(0,0,0,0.05)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-                            <div style={{ width: '120px' }}>
-                                <p style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--color-text-main)' }}>{item.word}</p>
-                                <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>{item.reading}</p>
-                            </div>
-
-                            <div style={{ width: '1px', height: '40px', background: '#eee' }}></div>
-
-                            <div>
-                                <p style={{ fontWeight: '500', marginBottom: '4px' }}>{item.meaning}</p>
-                                {item.exampleSentence && (
-                                    <p style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
-                                        {item.exampleSentence.japanese} ({item.exampleSentence.english})
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-
-                        <button style={{
-                            width: '36px', height: '36px',
-                            borderRadius: '50%',
-                            background: '#f5f5f5',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            color: 'var(--color-text-muted)'
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '32px', alignItems: 'start' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {filteredList.map((item) => (
+                        <div key={item.id} style={{
+                            background: 'white',
+                            padding: '20px',
+                            borderRadius: '16px',
+                            boxShadow: 'var(--shadow-sm)',
+                            border: '1px solid rgba(0,0,0,0.05)',
                         }}>
-                            <Volume2 size={18} />
-                        </button>
-                    </div>
-                ))}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                                <div>
+                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
+                                        <span style={{ fontSize: '28px', fontWeight: 'bold', color: 'var(--color-primary)' }}>{item.word}</span>
+                                        <span style={{ fontSize: '16px', fontWeight: '500' }}>{item.reading}</span>
+                                        <span style={{ fontSize: '14px', color: 'var(--color-text-muted)', background: '#f5f5f5', padding: '2px 8px', borderRadius: '6px' }}>
+                                            {toRomaji(item.reading)}
+                                        </span>
+                                    </div>
+                                    <p style={{ fontSize: '18px', fontWeight: '600', marginTop: '4px' }}>{item.meaning}</p>
+                                </div>
+                                <button style={{
+                                    width: '40px', height: '40px',
+                                    borderRadius: '50%',
+                                    background: '#f0f9ff',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    color: 'var(--color-primary)',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}>
+                                    <Volume2 size={20} />
+                                </button>
+                            </div>
 
-                {vocabList.length === 0 && (
-                    <p style={{ color: 'var(--color-text-muted)', textAlign: 'center' }}>{t('vocabulary.noContent')}</p>
-                )}
+                            {item.exampleJapanese && (
+                                <div style={{ background: '#f8f8f8', padding: '12px', borderRadius: '8px', fontSize: '14px' }}>
+                                    <p style={{ marginBottom: '4px', fontWeight: '500' }}>
+                                        {item.exampleJapanese} <span style={{ color: 'var(--color-text-muted)', fontWeight: 'normal' }}>({toRomaji(item.exampleReading || '')})</span>
+                                    </p>
+                                    <p style={{ color: 'var(--color-text-muted)' }}>{item.exampleMeaning}</p>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+
+                    {filteredList.length === 0 && (
+                        <div style={{ padding: '40px', textAlign: 'center', background: 'white', borderRadius: '16px' }}>
+                            <p style={{ color: 'var(--color-text-muted)' }}>{t('vocabulary.noContent')}</p>
+                        </div>
+                    )}
+                </div>
+
+                <div style={{
+                    position: 'sticky',
+                    top: '24px',
+                    background: '#fff1f0',
+                    padding: '24px',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(215, 74, 73, 0.1)'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px', color: 'var(--color-primary)' }}>
+                        <Lightbulb size={24} />
+                        <h3 style={{ fontSize: '18px', fontWeight: 'bold' }}>Tips Belajar Kosakata</h3>
+                    </div>
+                    <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingLeft: '20px', fontSize: '14px', color: 'var(--color-text-main)', lineHeight: '1.6' }}>
+                        <li>
+                            <strong>Konteks itu Penting:</strong> Jangan hanya menghafal kata, tapi pelajari juga contoh kalimatnya.
+                        </li>
+                        <li>
+                            <strong>Ucapkan Keras-keras:</strong> Melafalkan kata membantu otak merekam bunyi dan artinya sekaligus.
+                        </li>
+                        <li>
+                            <strong>Flashcard Rutin:</strong> Gunakan fitur Quiz setiap hari untuk memindahkan kata ke memori jangka panjang.
+                        </li>
+                        <li>
+                            <strong>Kelompokkan Kata:</strong> Belajar kata per tema (misal: makanan, transportasi) lebih efektif daripada acak.
+                        </li>
+                    </ul>
+                    <div style={{ marginTop: '24px', padding: '16px', background: 'rgba(255,255,255,0.6)', borderRadius: '12px', fontSize: '13px', color: 'var(--color-text-muted)', fontStyle: 'italic' }}>
+                        💡 Tekan tombol speaker untuk mendengar pelafalan yang benar (fitur ini akan segera aktif!).
+                    </div>
+                </div>
             </div>
         </div>
     );

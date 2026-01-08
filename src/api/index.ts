@@ -104,6 +104,13 @@ export interface ProgressSummary {
         grammar: { learning: number; mastered: number };
         kana: { learning: number; mastered: number };
     };
+    levels: Record<string, {
+        vocab: { learning: number; mastered: number };
+        kanji: { learning: number; mastered: number };
+        grammar: { learning: number; mastered: number };
+        kana: { learning: number; mastered: number };
+    }>;
+    weeklyActivity: { date: string; count: number }[];
     totalItems: number;
 }
 
@@ -115,7 +122,7 @@ export interface ProgressUpdate {
 }
 
 export interface QuizResult {
-    quizType: 'vocab' | 'kanji' | 'kana';
+    quizType: 'vocab' | 'kanji' | 'grammar' | 'kana';
     level: string;
     score: number;
     totalQuestions: number;
