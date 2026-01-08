@@ -78,7 +78,7 @@ export function Dashboard() {
     }
 
     return (
-        <div style={{ maxWidth: '1200px' }}>
+        <div style={{ width: '100%' }}>
             {/* Header */}
             <div style={{ marginBottom: '32px' }}>
                 <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>
