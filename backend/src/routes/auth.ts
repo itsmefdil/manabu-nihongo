@@ -114,6 +114,7 @@ router.get('/me', async (req, res) => {
                 email: user.email,
                 name: user.name,
                 currentLevel: user.currentLevel,
+                createdAt: user.createdAt,
                 streak: streakData[0] || null,
             },
         });

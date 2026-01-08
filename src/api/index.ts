@@ -81,6 +81,7 @@ export interface User {
     email: string;
     name: string;
     currentLevel?: string;
+    createdAt?: string; // ISO date string
 }
 
 export interface UserWithStreak extends User {
