@@ -6,10 +6,13 @@ import { contentApi } from '../api';
 import type { Vocabulary } from '../api';
 import { toRomaji } from 'wanakana';
 
+import { useSpeech } from '../hooks/useSpeech';
+
 export function VocabularyList() {
     const { level } = useParams<{ level: string }>();
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const { speak } = useSpeech();
     const [vocabList, setVocabList] = useState<Vocabulary[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -225,6 +228,10 @@ export function VocabularyList() {
                                                                     cursor: 'pointer',
                                                                     transition: 'all 0.2s',
                                                                 }}
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        speak(item.reading);
+                                                                    }}
                                                                     onMouseEnter={(e) => {
                                                                         e.currentTarget.style.background = 'var(--color-primary)';
                                                                         e.currentTarget.style.color = 'white';
