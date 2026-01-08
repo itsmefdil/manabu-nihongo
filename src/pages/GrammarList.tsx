@@ -124,69 +124,83 @@ export function GrammarList() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '32px', alignItems: 'start' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px', alignContent: 'start' }}>
                     {filteredList.map((item) => (
                         <div key={item.id} style={{
-                            background: 'white',
-                            borderRadius: '16px',
-                            boxShadow: 'var(--shadow-sm)',
-                            border: '1px solid rgba(0,0,0,0.05)',
-                            overflow: 'hidden'
-                        }}>
-                            <button
-                                onClick={() => toggleExpand(item.id)}
-                                style={{
-                                    width: '100%',
-                                    padding: '24px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between',
-                                    textAlign: 'left',
-                                    background: 'transparent',
-                                    border: 'none',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <div>
-                                    <p style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--color-accent)', marginBottom: '8px' }}>{item.pattern}</p>
-                                    <p style={{ fontSize: '16px', color: 'var(--color-text-main)' }}>{item.meaning}</p>
+                            background: '#ffffff',
+                            borderRadius: '20px',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                            border: '1px solid rgba(0,0,0,0.04)',
+                            overflow: 'hidden',
+                            transition: 'all 0.3s ease',
+                            cursor: 'pointer',
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-6px)';
+                                e.currentTarget.style.boxShadow = '0 16px 32px rgba(0,0,0,0.08)';
+                                e.currentTarget.style.borderColor = 'rgba(236, 163, 40, 0.3)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'none';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)';
+                                e.currentTarget.style.borderColor = 'rgba(0,0,0,0.04)';
+                            }}
+                            onClick={() => toggleExpand(item.id)}
+                        >
+                            <div style={{ padding: '24px', flex: 1 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                                    <span style={{
+                                        fontSize: '12px', fontWeight: '700', color: 'var(--color-accent)',
+                                        background: '#fffbf0', padding: '4px 10px', borderRadius: '20px', letterSpacing: '0.5px'
+                                    }}>
+                                        {item.level}
+                                    </span>
+                                    {expandedId === item.id ? <ChevronUp size={20} color="var(--color-text-muted)" /> : <ChevronDown size={20} color="var(--color-text-muted)" />}
                                 </div>
-                                {expandedId === item.id ? <ChevronUp size={24} color="var(--color-text-muted)" /> : <ChevronDown size={24} color="var(--color-text-muted)" />}
-                            </button>
+
+                                <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--color-text-main)', marginBottom: '8px', lineHeight: '1.3' }}>
+                                    {item.pattern}
+                                </h3>
+                                <p style={{ fontSize: '16px', color: 'var(--color-text-light)', marginBottom: '16px', lineHeight: '1.5' }}>
+                                    {item.meaning}
+                                </p>
+
+                                <div style={{
+                                    fontSize: '13px', color: '#b45309', fontWeight: '500',
+                                    background: 'rgba(236, 163, 40, 0.1)', padding: '8px 12px', borderRadius: '8px',
+                                    display: 'inline-block'
+                                }}>
+                                    💡 {item.usage}
+                                </div>
+                            </div>
 
                             {expandedId === item.id && (
                                 <div style={{
                                     padding: '0 24px 24px 24px',
-                                    borderTop: '1px solid #f0f0f0'
+                                    background: '#fafafa',
+                                    borderTop: '1px solid rgba(0,0,0,0.03)'
                                 }}>
-                                    <div style={{
-                                        marginTop: '16px',
-                                        padding: '12px',
-                                        background: '#fffbf0',
-                                        borderRadius: '8px',
-                                        color: '#b45309',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        marginBottom: '20px',
-                                        display: 'inline-block'
-                                    }}>
-                                        💡 {item.usage}
-                                    </div>
-
-                                    <p style={{ fontSize: '13px', fontWeight: 'bold', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '0.5px' }}>Contoh Penggunaan</p>
-
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                        {item.examples.map((ex, i) => (
-                                            <div key={i} style={{
-                                                padding: '16px',
-                                                background: '#f8f8f8',
-                                                borderRadius: '12px',
-                                                borderLeft: '4px solid var(--color-accent)'
-                                            }}>
-                                                <p style={{ fontSize: '16px', fontWeight: '600', marginBottom: '4px' }}>{ex.sentence}</p>
-                                                <p style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>{ex.meaning}</p>
-                                            </div>
-                                        ))}
+                                    <div style={{ marginTop: '20px' }}>
+                                        <p style={{ fontSize: '12px', fontWeight: '800', color: 'var(--color-text-muted)', textTransform: 'uppercase', marginBottom: '12px', letterSpacing: '1px' }}>
+                                            {t('kanji.examples')}
+                                        </p>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                            {item.examples.map((ex, i) => (
+                                                <div key={i} style={{
+                                                    padding: '12px',
+                                                    background: 'white',
+                                                    borderRadius: '10px',
+                                                    border: '1px solid rgba(0,0,0,0.05)',
+                                                    borderLeft: '3px solid var(--color-accent)'
+                                                }}>
+                                                    <p style={{ fontSize: '15px', fontWeight: '600', marginBottom: '4px', color: '#333' }}>{ex.sentence}</p>
+                                                    <p style={{ fontSize: '13px', color: '#888' }}>{ex.meaning}</p>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -194,7 +208,7 @@ export function GrammarList() {
                     ))}
 
                     {filteredList.length === 0 && (
-                        <div style={{ padding: '40px', textAlign: 'center', background: 'white', borderRadius: '16px' }}>
+                        <div style={{ padding: '40px', textAlign: 'center', background: 'white', borderRadius: '16px', gridColumn: '1 / -1' }}>
                             <p style={{ color: 'var(--color-text-muted)' }}>{t('grammar.noContent')}</p>
                         </div>
                     )}
