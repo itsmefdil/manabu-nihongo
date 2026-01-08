@@ -641,7 +641,7 @@ export function FlashcardQuiz() {
                             <div style={{ display: 'grid', gap: '12px', marginTop: '24px' }}>
                                 {currentItem.options.map((option, idx) => {
                                     const isCorrect = option === currentItem.answer;
-                                    const isSelected = true; // In this simplified view effectively we just show the result
+
 
                                     let borderColor = '#eee';
                                     let bgColor = 'white';

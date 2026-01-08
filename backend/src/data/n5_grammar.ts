@@ -35,4 +35,36 @@ export const n5Grammar = [
     { pattern: '〜と思います', meaning: 'saya pikir ~', usage: 'Pendapat', level: 'N5', examples: [{ sentence: 'いいと思います。', meaning: 'Saya pikir bagus.' }] },
     { pattern: '〜と言いました', meaning: 'berkata ~', usage: 'Kutipan', level: 'N5', examples: [{ sentence: '「好き」と言いました。', meaning: 'Dia berkata "suka".' }] },
     { pattern: '〜なる', meaning: 'menjadi ~', usage: 'Perubahan', level: 'N5', examples: [{ sentence: '大きくまりました。', meaning: 'Menjadi besar.' }] },
+
+    // --- ADDITIONAL PARTICLES ---
+    { pattern: '〜や〜', meaning: 'dan (dan lain-lain)', usage: 'Menyebutkan beberapa benda sebagai contoh', level: 'N5', examples: [{ sentence: '本やペンがあります。', meaning: 'Ada buku, pena, dll.' }] },
+    { pattern: '〜など', meaning: 'dan lain-lain', usage: 'Digunakan bersama "ya"', level: 'N5', examples: [{ sentence: '本やペンなどがあります。', meaning: 'Ada buku, pena, dan lainnya.' }] },
+    { pattern: '〜だけ', meaning: 'hanya', usage: 'Menunjukkan batasan', level: 'N5', examples: [{ sentence: 'これだけです。', meaning: 'Hanya ini.' }] },
+    { pattern: '〜しか〜ません', meaning: 'hanya (negatif)', usage: 'Menunjukkan "hanya" dengan nuansa negatif/sedikit', level: 'N5', examples: [{ sentence: '1000ルピアしかありません。', meaning: 'Hanya punya 1000 Rupiah (tidak lebih).' }] },
+    { pattern: '〜ごろ', meaning: 'kira-kira (waktu)', usage: 'Perkiraan waktu', level: 'N5', examples: [{ sentence: '3時ごろ帰ります。', meaning: 'Pulang kira-kira jam 3.' }] },
+    { pattern: '〜ぐらい / くらい', meaning: 'kira-kira (durasi/jumlah)', usage: 'Perkiraan jumlah/durasi', level: 'N5', examples: [{ sentence: '1時間ぐらい勉強しました。', meaning: 'Belajar kira-kira 1 jam.' }] },
+
+    // --- TIME EXPRESSIONS ---
+    { pattern: 'まだ〜ていません', meaning: 'belum ~', usage: 'Belum melakukan sesuatu', level: 'N5', examples: [{ sentence: 'まだ食べていません。', meaning: 'Belum makan.' }] },
+    { pattern: 'もう〜ました', meaning: 'sudah ~', usage: 'Sudah melakukan sesuatu', level: 'N5', examples: [{ sentence: 'もう食べました。', meaning: 'Sudah makan.' }] },
+    { pattern: '〜前に', meaning: 'sebelum ~', usage: 'Urutan waktu', level: 'N5', examples: [{ sentence: '寝る前に歯を磨きます。', meaning: 'Menggosok gigi sebelum tidur.' }] },
+    { pattern: '〜後で', meaning: 'setelah ~', usage: 'Urutan waktu', level: 'N5', examples: [{ sentence: '食べた後で薬を飲みます。', meaning: 'Minum obat setelah makan.' }] },
+
+    // --- ADVERBS & CONNECTORS ---
+    { pattern: 'とても', meaning: 'sangat', usage: 'Tingkat (positif)', level: 'N5', examples: [{ sentence: 'とてもおいしいです。', meaning: 'Sangat enak.' }] },
+    { pattern: 'あまり〜ません', meaning: 'tidak terlalu ~', usage: 'Tingkat (negatif)', level: 'N5', examples: [{ sentence: 'あまり美味しくないです。', meaning: 'Tidak terlalu enak.' }] },
+    { pattern: '全然〜ません', meaning: 'sama sekali tidak ~', usage: 'Penolakan total', level: 'N5', examples: [{ sentence: '全然分かりません。', meaning: 'Sama sekali tidak mengerti.' }] },
+    { pattern: 'でも', meaning: 'tetapi', usage: 'Konjungsi kontradiksi', level: 'N5', examples: [{ sentence: '高いです。でも、おいしいです。', meaning: 'Mahal. Tapi enak.' }] },
+    { pattern: 'そして', meaning: 'dan / kemudian', usage: 'Konjungsi penambah', level: 'N5', examples: [{ sentence: '朝起きます。そして、水を飲みます。', meaning: 'Bangun pagi. Kemudian minum air.' }] },
+    { pattern: '〜が、〜', meaning: '..., tetapi ...', usage: 'Menghubungkan kalimat kontradiktif', level: 'N5', examples: [{ sentence: '高いですが、おいしいです。', meaning: 'Mahal, tapi enak.' }] },
+    { pattern: '〜から', meaning: 'karena ~', usage: 'Alasan', level: 'N5', examples: [{ sentence: '忙しいから、行きません。', meaning: 'Karena sibuk, saya tidak pergi.' }] },
+
+    // --- VERB CONJUGATIONS & USAGE ---
+    { pattern: '〜に行きます', meaning: 'pergi untuk ~', usage: 'Tujuan pergi (Root Masu + ni ikimasu)', level: 'N5', examples: [{ sentence: '映画を見に行きます。', meaning: 'Pergi untuk menonton film.' }] },
+    { pattern: '〜が上手です', meaning: 'pandai ~', usage: 'Kemampuan', level: 'N5', examples: [{ sentence: '日本語が上手です。', meaning: 'Pandai bahasa Jepang.' }] },
+    { pattern: '〜が下手です', meaning: 'tidak pandai ~', usage: 'Kemampuan (lawan dari jouzu)', level: 'N5', examples: [{ sentence: '歌が下手です。', meaning: 'Tidak pandai bernyanyi.' }] },
+    { pattern: '〜が好きです', meaning: 'suka ~', usage: 'Kesukaan', level: 'N5', examples: [{ sentence: 'アニメが好きです。', meaning: 'Suka anime.' }] },
+    { pattern: '〜が嫌いです', meaning: 'benci / tidak suka ~', usage: 'Ketidaksukaan', level: 'N5', examples: [{ sentence: '野菜が嫌いです。', meaning: 'Benci sayur.' }] },
+    { pattern: 'どうやって', meaning: 'bagaimana caranya', usage: 'Menanyakan cara', level: 'N5', examples: [{ sentence: 'どうやって行きますか。', meaning: 'Bagaimana cara perginya?' }] },
+    { pattern: 'どのぐらい', meaning: 'berapa lama / berapa banyak', usage: 'Menanyakan durasi/jumlah', level: 'N5', examples: [{ sentence: 'どのぐらいかかりますか。', meaning: 'Memakan waktu berapa lama?' }] },
 ];

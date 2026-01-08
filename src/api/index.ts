@@ -134,6 +134,7 @@ export interface Vocabulary {
     reading: string;
     meaning: string;
     level: string;
+    category?: string;
     exampleJapanese?: string;
     exampleReading?: string;
     exampleMeaning?: string;

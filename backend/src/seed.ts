@@ -20,6 +20,7 @@ async function seed() {
             reading: v.reading,
             meaning: v.meaning,
             level: v.level,
+            category: v.category,
             exampleJapanese: v.exampleJapanese,
             exampleReading: v.exampleReading,
             exampleMeaning: v.exampleMeaning,

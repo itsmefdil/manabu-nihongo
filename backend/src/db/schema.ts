@@ -56,6 +56,7 @@ export const vocabulary = sqliteTable('vocabulary', {
     reading: text('reading').notNull(),
     meaning: text('meaning').notNull(),
     level: text('level').notNull(),
+    category: text('category').notNull().default('Umum'),
     exampleJapanese: text('example_japanese'),
     exampleReading: text('example_reading'),
     exampleMeaning: text('example_meaning'),
