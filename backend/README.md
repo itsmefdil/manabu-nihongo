@@ -3,9 +3,22 @@
 The API server for the Manabu learning platform.
 
 ## Configuration
-
+    
 - **Port**: Defaults to `3333`. (See `src/index.ts`)
-- **Database**: SQLite with Drizzle ORM (`manabu.db`).
+- **Database**: SQLite (default) or PostgreSQL. Configured via `DB_TYPE` in `.env`.
+
+### Environment Variables
+Copy `.env.example` to `.env` and adjust as needed.
+
+```bash
+# Default (SQLite)
+DB_TYPE=sqlite
+DATABASE_URL=file:./manabu-data.db
+
+# For PostgreSQL
+# DB_TYPE=postgres
+# DATABASE_URL=postgresql://user:password@localhost:5432/manabu
+```
 
 ## Commands
 
@@ -20,10 +33,16 @@ bun run dev
 ```
 
 ### Database Management
-Migrations are handled via Drizzle Kit.
+Migrations are handled via Drizzle Kit. Commands automatically adapt to the configured `DB_TYPE`.
 
 ```bash
-# Push schema changes to database
+# Generate migrations
+bun run db:generate
+
+# Apply migrations
+bun run db:migrate
+
+# Push schema changes to database (prototyping only, mainly for SQLite)
 bun run db:push
 
 # View database with Drizzle Studio
