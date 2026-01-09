@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import type { JWTPayload } from '../types';
+import type { JWTPayload } from '../types/index.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'manabu-secret-key-change-in-production';
 

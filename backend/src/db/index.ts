@@ -2,8 +2,8 @@ import { drizzle as drizzleLibsql } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import { drizzle as drizzlePg } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import * as schemaSqlite from './schema.sqlite';
-import * as schemaPg from './schema.postgres';
+import * as schemaSqlite from './schema.sqlite.js';
+import * as schemaPg from './schema.postgres.js';
 
 // Determine database type from environment (default to sqlite)
 const isPostgres = process.env.DB_TYPE === 'postgres';

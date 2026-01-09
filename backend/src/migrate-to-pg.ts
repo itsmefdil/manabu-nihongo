@@ -2,8 +2,8 @@ import { drizzle as drizzleLibsql } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import { drizzle as drizzlePg } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import * as schemaSqlite from './db/schema.sqlite';
-import * as schemaPg from './db/schema.postgres';
+import * as schemaSqlite from './db/schema.sqlite.js';
+import * as schemaPg from './db/schema.postgres.js';
 import { sql } from 'drizzle-orm';
 
 async function migrate() {

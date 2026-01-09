@@ -1,9 +1,9 @@
-import { db, schema } from './db';
+import { db, schema } from './db/index.js';
 import { v4 as uuidv4 } from 'uuid';
 
-import { n5Vocab } from './data/n5_vocab';
-import { n5Kanji } from './data/n5_kanji';
-import { n5Grammar } from './data/n5_grammar';
+import { n5Vocab } from './data/n5_vocab.js';
+import { n5Kanji } from './data/n5_kanji.js';
+import { n5Grammar } from './data/n5_grammar.js';
 
 async function seed() {
     console.log('🧹 Clearing existing data...');
