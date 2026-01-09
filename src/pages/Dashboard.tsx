@@ -89,8 +89,8 @@ export function Dashboard() {
     const kanjiLearned = (summary?.kanji.learning ?? 0) + (summary?.kanji.mastered ?? 0);
     const grammarLearned = (summary?.grammar.learning ?? 0) + (summary?.grammar.mastered ?? 0);
 
-    // Show loading state while checking auth
-    if (isLoading || (isAuthenticated && isLoadingProgress)) {
+    // Show loading state ONLY for initial auth check, not for data fetching
+    if (isLoading) {
         return (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '400px' }}>
                 <div style={{ textAlign: 'center' }}>
