@@ -26,17 +26,14 @@ export function Dashboard() {
     const { t } = useTranslation();
     const { user, streak, isAuthenticated, isLoading } = useAuth();
     const [progressData, setProgressData] = useState<ProgressSummary | null>(null);
-    const [isLoadingProgress, setIsLoadingProgress] = useState(false);
 
     useEffect(() => {
         const fetchProgress = async () => {
             if (isAuthenticated) {
-                setIsLoadingProgress(true);
                 const result = await progressApi.getProgress();
                 if (result.success && result.data) {
                     setProgressData(result.data);
                 }
-                setIsLoadingProgress(false);
             }
         };
 
