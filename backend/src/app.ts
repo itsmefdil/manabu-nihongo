@@ -6,8 +6,14 @@ import { errorHandler } from './middleware/error.js';
 const app = express();
 
 // Middleware
+// Parse CORS origin
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+const allowedOrigins = corsOrigin.includes(',')
+    ? corsOrigin.split(',').map(o => o.trim())
+    : corsOrigin;
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: allowedOrigins,
     credentials: true,
 }));
 app.use(express.json());
