@@ -122,8 +122,12 @@ router.get('/me', async (req, res) => {
                 streak: streakData[0] || null,
             },
         });
-    } catch {
-        return res.status(401).json({ success: false, error: 'Token tidak valid' });
+    } catch (error) {
+        console.error('Get user error:', error);
+        if (error instanceof Error && error.message === 'jwt malformed') {
+            return res.status(401).json({ success: false, error: 'Token tidak valid' });
+        }
+        return res.status(500).json({ success: false, error: 'Gagal memuat data user' });
     }
 });
 
