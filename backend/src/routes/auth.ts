@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { eq } from 'drizzle-orm';
 import { db, schema } from '../db/index.js';
 import { generateToken } from '../middleware/auth.js';
+import jwt from 'jsonwebtoken';
 
 const router = Router();
 
@@ -99,7 +100,6 @@ router.get('/me', async (req, res) => {
         if (!token) {
             return res.status(401).json({ success: false, error: 'Token tidak valid' });
         }
-        const jwt = await import('jsonwebtoken');
         const secret = process.env.JWT_SECRET || 'manabu-secret-key-change-in-production';
         const decoded = jwt.verify(token, secret) as unknown as { userId: string };
 
