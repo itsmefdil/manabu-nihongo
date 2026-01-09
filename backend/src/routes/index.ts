@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import authRoutes from './auth';
-import progressRoutes from './progress';
-import contentRoutes from './content';
+import authRoutes from './auth.js';
+import progressRoutes from './progress.js';
+import contentRoutes from './content.js';
 
 const router = Router();
 
