@@ -17,9 +17,15 @@ export function authMiddleware(req: AuthRequest, res: Response, next: NextFuncti
     }
 
     const token = authHeader.split(' ')[1];
+    if (!token) {
+        res.status(401).json({ success: false, error: 'Token tidak valid' });
+        return;
+    }
+
+
 
     try {
-        const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+        const decoded = jwt.verify(token, JWT_SECRET as string) as unknown as JWTPayload;
         req.user = decoded;
         next();
     } catch {

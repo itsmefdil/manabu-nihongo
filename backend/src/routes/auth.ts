@@ -96,8 +96,12 @@ router.get('/me', async (req, res) => {
         }
 
         const token = authHeader.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ success: false, error: 'Token tidak valid' });
+        }
         const jwt = await import('jsonwebtoken');
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'manabu-secret-key-change-in-production') as { userId: string };
+        const secret = process.env.JWT_SECRET || 'manabu-secret-key-change-in-production';
+        const decoded = jwt.verify(token, secret) as unknown as { userId: string };
 
         const users = await db.select().from(schema.users).where(eq(schema.users.id, decoded.userId)).limit(1);
         if (users.length === 0) {

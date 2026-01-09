@@ -24,7 +24,7 @@ router.get('/:level/kanji', async (req, res) => {
         const data = await db.select().from(schema.kanji).where(eq(schema.kanji.level, level));
 
         // Parse JSON strings
-        const parsed = data.map(k => ({
+        const parsed = data.map((k: typeof data[0]) => ({
             ...k,
             onyomi: JSON.parse(k.onyomi),
             kunyomi: JSON.parse(k.kunyomi),
@@ -46,7 +46,7 @@ router.get('/:level/grammar', async (req, res) => {
         const data = await db.select().from(schema.grammar).where(eq(schema.grammar.level, level));
 
         // Parse JSON strings
-        const parsed = data.map(g => ({
+        const parsed = data.map((g: typeof data[0]) => ({
             ...g,
             examples: JSON.parse(g.examples),
         }));
