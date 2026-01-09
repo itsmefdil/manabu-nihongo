@@ -10,7 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "migrate:pg": "bun run src/migrate-to-pg.ts"
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",

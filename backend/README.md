@@ -49,6 +49,25 @@ bun run db:push
 bun run db:studio
 ```
 
+### Migration: SQLite to PostgreSQL
+
+To migrate your existing data from SQLite to PostgreSQL:
+
+1.  **Prepare PostgreSQL**: Ensure you have a PostgreSQL database running and an empty database created.
+2.  **Configure Environment**: Update your `.env` file with the PostgreSQL connection string. You can verify it works by running `bun run db:push`.
+    ```env
+    DATABASE_URL=postgresql://user:password@localhost:5432/manabu
+    ```
+3.  **Run Migration Script**: Execute the migration script. It will read from the local SQLite file (`manabu-data.db`) and insert data into the PostgreSQL database defined in `DATABASE_URL`.
+    ```bash
+    bun run migrate:pg
+    ```
+4.  **Switch Application**: Update your `.env` to use the postgres driver.
+    ```env
+    DB_TYPE=postgres
+    ```
+5.  **Restart**: Restart your backend server.
+
 ## API Documentation
 
 Detailed API endpoints and examples are documented in [API.md](./API.md).
