@@ -26,14 +26,17 @@ export function Dashboard() {
     const { t } = useTranslation();
     const { user, streak, isAuthenticated, isLoading } = useAuth();
     const [progressData, setProgressData] = useState<ProgressSummary | null>(null);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
         const fetchProgress = async () => {
             if (isAuthenticated) {
+                setIsRefreshing(true);
                 const result = await progressApi.getProgress();
                 if (result.success && result.data) {
                     setProgressData(result.data);
                 }
+                setIsRefreshing(false);
             }
         };
 
@@ -101,23 +104,30 @@ export function Dashboard() {
     return (
         <div style={{ width: '100%' }}>
             {/* Header */}
-            <div style={{ marginBottom: '32px' }}>
-                <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    {isAuthenticated ? `おかえりなさい, ${user?.name || 'Pelajar'}!` : 'おかえりなさい!'}
-                    <span style={{ fontWeight: 'normal', fontSize: '20px', marginLeft: '8px' }}>{t('dashboard.welcome')}</span>
-                </h1>
-                <p style={{ color: 'var(--color-text-muted)' }}>
-                    {isAuthenticated
-                        ? `Level: ${user?.currentLevel || 'N5'} • Total XP: ${totalXp.toLocaleString()}`
-                        : t('dashboard.subtitle')}
-                </p>
-                {!isAuthenticated && (
-                    <button
-                        onClick={() => navigate('/login')}
-                        style={{ marginTop: '12px', padding: '8px 16px', background: 'var(--color-primary)', color: 'white', borderRadius: '8px', fontWeight: '500' }}
-                    >
-                        Masuk untuk menyimpan progress
-                    </button>
+            <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                    <h1 style={{ fontSize: '28px', fontWeight: 'bold', marginBottom: '8px' }}>
+                        {isAuthenticated ? `おかえりなさい, ${user?.name || 'Pelajar'}!` : 'おかえりなさい!'}
+                        <span style={{ fontWeight: 'normal', fontSize: '20px', marginLeft: '8px' }}>{t('dashboard.welcome')}</span>
+                    </h1>
+                    <p style={{ color: 'var(--color-text-muted)' }}>
+                        {isAuthenticated
+                            ? `Level: ${user?.currentLevel || 'N5'} • Total XP: ${totalXp.toLocaleString()}`
+                            : t('dashboard.subtitle')}
+                    </p>
+                    {!isAuthenticated && (
+                        <button
+                            onClick={() => navigate('/login')}
+                            style={{ marginTop: '12px', padding: '8px 16px', background: 'var(--color-primary)', color: 'white', borderRadius: '8px', fontWeight: '500' }}
+                        >
+                            Masuk untuk menyimpan progress
+                        </button>
+                    )}
+                </div>
+                {isRefreshing && (
+                    <div style={{ padding: '8px', background: 'white', borderRadius: '50%', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                        <Loader size={20} className="animate-spin" color="var(--color-primary)" style={{ animation: 'spin 1s linear infinite' }} />
+                    </div>
                 )}
             </div>
 
